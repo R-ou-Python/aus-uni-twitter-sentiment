@@ -86,8 +86,7 @@ p <- top_covid %>%
        y = "Frequency",
        caption = "Source: Twitter Developer API") +
   theme_bw() +
-  theme(legend.position = "bottom",
-        axis.text = element_text(colour = "#25388E"),
+  theme(axis.text = element_text(colour = "#25388E"),
         axis.title = element_text(colour = "#25388E", face = "bold"),
         panel.border = element_blank(),
         panel.grid.minor = element_blank(),
@@ -96,7 +95,6 @@ p <- top_covid %>%
         panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.title = element_text(colour = "#25388E", face = "bold"),
-        plot.subtitle = element_text(colour = "#25388E"),
         plot.caption = element_text(colour = "#25388E"))
 print(p)
 
