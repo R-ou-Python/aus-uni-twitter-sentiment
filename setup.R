@@ -10,7 +10,7 @@
 
 library(tidyverse)
 library(tidytext)
-library(twitteR)
+library(rtweet)
 library(readxl)
 library(janitor)
 library(data.table)

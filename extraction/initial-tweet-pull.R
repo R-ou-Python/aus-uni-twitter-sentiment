@@ -22,15 +22,13 @@ the_handles <- unique(handle_raw$twitter_handle)
 
 #---------------------------------------TWEET SCRAPING-----------------------------
 
+# Rtweet approach
+
 empty.list <- list()
 for(i in the_handles){
-  the_tweets <- searchTwitter(i, n = 10, lang = "en")
+  the_tweets <- get_timeline(i, n = 50, include_rts = FALSE)
   
-  uni_feed <- twListToDF(the_tweets) %>%
-    mutate(uni = i)
-  
-  empty.list[[i]] <- uni_feed
-
+  empty.list[[i]] <- the_tweets
 }
 
 tweet_data <- rbindlist(empty.list, use.names = TRUE)
