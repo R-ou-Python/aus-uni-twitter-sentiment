@@ -11,3 +11,5 @@
 library(tidyverse)
 library(tidytext)
 library(twitteR)
+library(readxl)
+library(janitor)
