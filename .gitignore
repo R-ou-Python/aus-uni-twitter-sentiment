@@ -4,6 +4,8 @@
 .Ruserdata
 .Rproj
 
+twitter-auth/*.R
+
 output/*.xlsx
 output/*.csv
 output/*.pptx
