@@ -26,4 +26,13 @@ tweet_data <- rbindlist(empty.list, use.names = TRUE)
 
 #---------------------------------------CLEANING-----------------------------------
 
+# Filter to tweets that contain references to COVID-19
 
+covid_tweets <- tweet_data %>%
+  filter(grepl("COVID|COVID19|COVID-19|covid|covid19|covid-19|
+                Covid|Covid19|Covid-19|Coronavirus|coronavirus", 
+                text)|
+          grepl("COVID|COVID19|COVID-19|covid|covid19|covid-19|
+                 Covid|Covid19|Covid-19|Coronavirus|coronavirus", 
+                 hashtags)) %>%
+  dplyr::select(c(screen_name, text, hashtags))
