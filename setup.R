@@ -19,6 +19,8 @@ library(rtweet)
 library(readxl)
 library(janitor)
 library(data.table)
+library(qdapRegex)
+library(Cairo)
 
 # Load in twitter handles of universities
 
@@ -33,3 +35,7 @@ the_handles <- unique(handle_raw$twitter_handle)
 
 pos_words <- read_excel("data/positive_words.xlsx")
 neg_words <- read_excel("data/negative_words.xlsx")
+
+# Define a 'not in' function
+
+'%ni%' <- Negate('%in%')
