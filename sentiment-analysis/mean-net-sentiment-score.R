@@ -129,7 +129,7 @@ p <- merged_sum %>%
         axis.title = element_text(colour = "#25388E", face = "bold"),
         panel.border = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
+        panel.grid.major = element_line(colour = "white"),
         axis.line = element_line(colour = "#25388E"),
         panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
