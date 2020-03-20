@@ -126,9 +126,10 @@ p <- merged_sum %>%
   mutate(university = as.factor(university)) %>%
   mutate(university = fct_reorder(university, net_sent)) %>%
   ggplot(aes(x = university, y = net_sent)) +
-  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator), stat = "identity") +
+  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator), 
+               size = 3, stat = "identity") +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
-       x = "University account",
+       x = NULL,
        y = "Mean net sentiment",
        caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nPositive and negative word lexicon source: Hu & Liu (2004)",
        colour = NULL) +
