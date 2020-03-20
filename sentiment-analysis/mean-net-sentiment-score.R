@@ -16,7 +16,7 @@
 load("initial-tweet-pull.Rda")
 
 # Set up positive and negative words as vectors for looping after removing short
-# words
+# words and cleaning out symbols
 
 pos_clean <- pos_words %>%
   mutate(positive_words_clean = rm_nchar_words(positive_words, "1,2")) %>%
@@ -68,7 +68,7 @@ short_data <- tweet_data %>%
 pos.list <- list()
 for(i in pos_vector){
   pos_content_count <- short_data %>%
-    group_by(screen_name) %>%
+    group_by(screen_name, text) %>%
     summarise(counter = sum(str_count(text, i))) %>%
     ungroup() %>%
     mutate(word = i)
@@ -77,8 +77,8 @@ for(i in pos_vector){
 }
 
 pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE) %>%
-  group_by(screen_name) %>%
-  summarise(pos_count = mean(counter)) %>%
+  group_by(screen_name, text) %>%
+  summarise(pos_count = sum(counter)) %>%
   ungroup()
 
 # Summarise counts of negative words
@@ -86,7 +86,7 @@ pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE) %>%
 neg.list <- list()
 for(i in neg_vector){
   neg_content_count <- short_data %>%
-    group_by(screen_name) %>%
+    group_by(screen_name, text) %>%
     summarise(counter = sum(str_count(text, fixed(i)))) %>%
     ungroup() %>%
     mutate(word = i)
@@ -95,24 +95,33 @@ for(i in neg_vector){
 }
 
 neg_tweet_sum <- rbindlist(neg.list, use.names = TRUE) %>%
-  group_by(screen_name) %>%
-  summarise(neg_count = mean(counter)) %>%
+  group_by(screen_name, text) %>%
+  summarise(neg_count = sum(counter)) %>%
   ungroup()
 
 # Merge together to computer net sentiment and add full uni names
+# Need to increase positive sentiment by proportionate difference
+# in number of negative lexicon words compared to positive
+
+the_diff <- solve(nrow(pos_clean),nrow(neg_clean))
 
 handle_clean <- handle_raw %>%
   mutate(twitter_handle = gsub("@", "", twitter_handle))
 
 merged_sum <- pos_tweet_sum %>%
-  inner_join(neg_tweet_sum, by = c("screen_name" = "screen_name")) %>%
+  inner_join(neg_tweet_sum, by = c("screen_name" = "screen_name",
+                                   "text" = "text")) %>%
+  mutate(pos_count = pos_count * the_diff) %>%
   mutate(net_sent = pos_count - neg_count) %>%
+  group_by(screen_name) %>%
+  summarise(mean_net_sent = mean(net_sent)) %>%
+  ungroup() %>%
   mutate(indicator = case_when(
-         net_sent < 0  ~ "Negative",
-         net_sent == 0 ~ "Neutral",
-         net_sent > 0  ~ "Positive")) %>%
+          mean_net_sent < 0  ~ "Negative",
+          mean_net_sent == 0 ~ "Neutral",
+          mean_net_sent > 0  ~ "Positive")) %>%
   inner_join(handle_clean, by = c("screen_name" = "twitter_handle")) %>%
-  arrange(desc(net_sent))
+  arrange(desc(mean_net_sent))
 
 #---------------------------------------VISUALISATION------------------------------
 
@@ -124,14 +133,14 @@ sent_palette <- c("Negative" = "#F84791",
 
 p <- merged_sum %>%
   mutate(university = as.factor(university)) %>%
-  mutate(university = fct_reorder(university, net_sent)) %>%
-  ggplot(aes(x = university, y = net_sent)) +
-  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator), 
+  mutate(university = fct_reorder(university, mean_net_sent)) %>%
+  ggplot(aes(x = university, y = mean_net_sent)) +
+  geom_segment(aes(x = university, y = 0, xend = university, yend = mean_net_sent, colour = indicator), 
                size = 3, stat = "identity") +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = NULL,
        y = "Mean net sentiment",
-       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nPositive and negative word lexicon source: Hu & Liu (2004)",
+       caption = "Source: Twitter Developer API\nMean net sentiment = average of positive word count - mean negative word count at the Tweet level\nPositive and negative word lexicon source: Hu & Liu (2004)",
        colour = NULL) +
   coord_flip() +
   theme_bw() +
