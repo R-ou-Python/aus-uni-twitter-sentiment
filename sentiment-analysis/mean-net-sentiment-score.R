@@ -130,7 +130,7 @@ p <- merged_sum %>%
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
        y = "Mean net sentiment",
-       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nWord lexicon source: Hu & Liu (2004)",
+       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nPositive and negative word lexicon source: Hu & Liu (2004)",
        colour = NULL) +
   coord_flip() +
   theme_bw() +
