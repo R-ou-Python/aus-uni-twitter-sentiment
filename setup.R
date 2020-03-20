@@ -16,6 +16,7 @@
 library(tidyverse)
 library(tidytext)
 library(rtweet)
+library(twitteR)
 library(readxl)
 library(janitor)
 library(data.table)

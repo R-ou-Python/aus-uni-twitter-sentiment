@@ -52,7 +52,7 @@ covid_words <- covid_tweets %>%
 
 clean_covid_words <- covid_words %>%
   mutate(cleaner_words = rm_nchar_words(word, "1,3")) %>%
-  mutate(program_simplified = str_trim(cleaner_words, side = "both")) %>%
+  mutate(cleaner_words = str_trim(cleaner_words, side = "both")) %>%
   filter(cleaner_words != ".") %>%
   filter(cleaner_words != "'") %>%
   filter(!is.na(cleaner_words)) %>%
