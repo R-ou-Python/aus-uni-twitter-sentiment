@@ -37,4 +37,23 @@ short_data <- tweet_data %>%
 
 # Summarise counts of positive words
 
+pos.list <- list()
+for(i in pos_vector){
+pos_content_count <- short_data %>%
+  group_by(screen_name) %>%
+  summarise(counter = sum(str_count(short_data$text, i))) %>%
+  ungroup() %>%
+  mutate(word = i)
+
+  pos.list[[i]] <- pos_content_count
+}
+
+pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE)
+
+# Summarise counts of positive words
+
+
+
+#---------------------------------------VISUALISATION------------------------------
+
 
