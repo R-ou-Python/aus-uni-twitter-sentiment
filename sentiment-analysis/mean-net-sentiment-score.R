@@ -122,7 +122,7 @@ sent_palette <- c("Negative" = "#F84791",
                   "Positive" = "#57DBD8")
 
 p <- merged_sum %>%
-  ggplot(aes(x = university, y = net_sent)) +
+  ggplot(aes(x = reorder(university, net_sent), y = net_sent)) +
   geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator)) +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
@@ -135,7 +135,7 @@ p <- merged_sum %>%
         axis.title = element_text(colour = "#25388E", face = "bold"),
         panel.border = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(colour = "white"),
+        panel.grid.major = element_blank(),
         axis.line = element_line(colour = "#25388E"),
         panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
