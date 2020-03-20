@@ -111,7 +111,8 @@ merged_sum <- pos_tweet_sum %>%
          net_sent < 0  ~ "Negative",
          net_sent == 0 ~ "Neutral",
          net_sent > 0  ~ "Positive")) %>%
-  inner_join(handle_clean, by = c("screen_name" = "twitter_handle"))
+  inner_join(handle_clean, by = c("screen_name" = "twitter_handle")) %>%
+  arrange(desc(net_sent))
 
 #---------------------------------------VISUALISATION------------------------------
 
@@ -122,8 +123,10 @@ sent_palette <- c("Negative" = "#F84791",
                   "Positive" = "#57DBD8")
 
 p <- merged_sum %>%
-  ggplot(aes(x = reorder(university, net_sent), y = net_sent)) +
-  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator)) +
+  mutate(university = as.factor(university)) %>%
+  mutate(university = fct_reorder(university, net_sent)) %>%
+  ggplot(aes(x = university, y = net_sent)) +
+  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator), stat = "identity") +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
        y = "Mean net sentiment",
