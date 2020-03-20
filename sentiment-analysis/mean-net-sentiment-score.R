@@ -87,7 +87,7 @@ neg.list <- list()
 for(i in neg_vector){
   neg_content_count <- short_data %>%
     group_by(screen_name) %>%
-    summarise(counter = sum(str_count(text, i))) %>%
+    summarise(counter = sum(str_count(text, fixed(i)))) %>%
     ungroup() %>%
     mutate(word = i)
   
@@ -99,14 +99,19 @@ neg_tweet_sum <- rbindlist(neg.list, use.names = TRUE) %>%
   summarise(neg_count = mean(counter)) %>%
   ungroup()
 
-# Merge together to computer net sentiment
+# Merge together to computer net sentiment and add full uni names
+
+handle_clean <- handle_raw %>%
+  mutate(twitter_handle = gsub("@", "", twitter_handle))
 
 merged_sum <- pos_tweet_sum %>%
+  inner_join(neg_tweet_sum, by = c("screen_name" = "screen_name")) %>%
   mutate(net_sent = pos_count - neg_count) %>%
   mutate(indicator = case_when(
          net_sent < 0  ~ "Negative",
          net_sent == 0 ~ "Neutral",
-         net_sent > 0  ~ "Positive"))
+         net_sent > 0  ~ "Positive")) %>%
+  inner_join(handle_clean, by = c("screen_name" = "twitter_handle"))
 
 #---------------------------------------VISUALISATION------------------------------
 
@@ -117,12 +122,13 @@ sent_palette <- c("Negative" = "#F84791",
                   "Positive" = "#57DBD8")
 
 p <- merged_sum %>%
-  ggplot(aes(x = screen_name, y = net_sent)) +
-  geom_segment(aes(x = screen_name, y = 0, xend = screen_name, yend = net_sent, colour = sent_palette)) +
+  ggplot(aes(x = university, y = net_sent)) +
+  geom_segment(aes(x = university, y = 0, xend = university, yend = net_sent, colour = indicator)) +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
        y = "Mean net sentiment",
-       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nWord lexicon source: Hu & Liu (2004)") +
+       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nWord lexicon source: Hu & Liu (2004)",
+       colour = NULL) +
   coord_flip() +
   theme_bw() +
   theme(axis.text = element_text(colour = "#25388E"),
@@ -134,7 +140,8 @@ p <- merged_sum %>%
         panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.title = element_text(colour = "#25388E", face = "bold"),
-        plot.caption = element_text(colour = "#25388E")) +
+        plot.caption = element_text(colour = "#25388E"),
+        legend.position = "none") +
   scale_colour_manual(values = sent_palette)
 print(p)
 
