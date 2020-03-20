@@ -103,13 +103,22 @@ neg_tweet_sum <- rbindlist(neg.list, use.names = TRUE) %>%
 
 merged_sum <- pos_tweet_sum %>%
   mutate(net_sent = pos_count - neg_count) %>%
-  mutate()
+  mutate(indicator = case_when(
+         net_sent < 0  ~ "Negative",
+         net_sent == 0 ~ "Neutral",
+         net_sent > 0  ~ "Positive"))
 
 #---------------------------------------VISUALISATION------------------------------
 
+# Define palette for plotting based on sentiment
+
+sent_palette <- c("Negative" = "#F84791",
+                  "Neutral" = "#25388E",
+                  "Positive" = "#57DBD8")
+
 p <- merged_sum %>%
   ggplot(aes(x = screen_name, y = net_sent)) +
-  geom_segment(aes(x = x, y = y, xend = x1, yend = y1, colour = sent_palette)) +
+  geom_segment(aes(x = screen_name, y = 0, xend = screen_name, yend = net_sent, colour = sent_palette)) +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
        y = "Net sentiment",
@@ -125,7 +134,8 @@ p <- merged_sum %>%
         panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
         plot.title = element_text(colour = "#25388E", face = "bold"),
-        plot.caption = element_text(colour = "#25388E"))
+        plot.caption = element_text(colour = "#25388E")) +
+  scale_colour_manual(values = sent_palette)
 print(p)
 
 #---------------------------------------PLOT EXPORT--------------------------------
