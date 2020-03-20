@@ -15,11 +15,25 @@
 
 load("initial-tweet-pull.Rda")
 
-# Set up positive and negative words as vectors for looping
+# Set up positive and negative words as vectors for looping after removing short
+# words
 
-pos_vector <- unique(pos_words$positive_words)
+pos_clean <- pos_words %>%
+  mutate(positive_words_clean = rm_nchar_words(positive_words, "1,2")) %>%
+  mutate(positive_words_clean = str_trim(positive_words_clean, side = "both")) %>%
+  filter(positive_words_clean != "+") %>%
+  filter(!is.na(positive_words_clean)) %>%
+  rename(positive_words = positive_words_clean)
 
-neg_vector <- unique(neg_words$negative_words)
+neg_clean <- neg_words %>%
+  mutate(negative_words_clean = rm_nchar_words(negative_words, "1,2")) %>%
+  mutate(negative_words_clean = str_trim(negative_words_clean, side = "both")) %>%
+  filter(!is.na(negative_words_clean)) %>%
+  rename(negative_words_ = negative_words_clean)
+
+pos_vector <- unique(pos_clean$positive_words)
+
+neg_vector <- unique(neg_clean$negative_words)
 
 #---------------------------------------PRE PROCESSING-----------------------------
 
@@ -41,14 +55,17 @@ pos.list <- list()
 for(i in pos_vector){
 pos_content_count <- short_data %>%
   group_by(screen_name) %>%
-  summarise(counter = sum(str_count(short_data$text, i))) %>%
+  summarise(counter = sum(str_count(text, i))) %>%
   ungroup() %>%
   mutate(word = i)
 
   pos.list[[i]] <- pos_content_count
 }
 
-pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE)
+pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE) %>%
+  group_by(screen_name) %>%
+  summarise(counter = sum(counter)) %>%
+  ungroup()
 
 # Summarise counts of positive words
 
