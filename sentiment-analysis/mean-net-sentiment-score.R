@@ -23,13 +23,27 @@ pos_clean <- pos_words %>%
   mutate(positive_words_clean = str_trim(positive_words_clean, side = "both")) %>%
   filter(positive_words_clean != "+") %>%
   filter(!is.na(positive_words_clean)) %>%
+  dplyr::select(c(positive_words_clean)) %>%
   rename(positive_words = positive_words_clean)
 
 neg_clean <- neg_words %>%
   mutate(negative_words_clean = rm_nchar_words(negative_words, "1,2")) %>%
   mutate(negative_words_clean = str_trim(negative_words_clean, side = "both")) %>%
   filter(!is.na(negative_words_clean)) %>%
-  rename(negative_words_ = negative_words_clean)
+  filter(negative_words_clean != "-faced") %>%
+  filter(negative_words_clean != "-faces") %>%
+  filter(negative_words_clean != "*") %>%
+  filter(negative_words_clean != "**") %>%
+  filter(negative_words_clean != "-cal") %>%
+  filter(negative_words_clean != "-hum") %>%
+  filter(negative_words_clean != "-viewable") %>%
+  filter(negative_words_clean != " ") %>%
+  dplyr::select(c(negative_words_clean)) %>%
+  rename(negative_words = negative_words_clean) %>%
+  arrange(negative_words)
+
+neg_clean <- neg_clean[-1,]
+neg_clean <- neg_clean[-1,]
 
 pos_vector <- unique(pos_clean$positive_words)
 
@@ -53,24 +67,69 @@ short_data <- tweet_data %>%
 
 pos.list <- list()
 for(i in pos_vector){
-pos_content_count <- short_data %>%
-  group_by(screen_name) %>%
-  summarise(counter = sum(str_count(text, i))) %>%
-  ungroup() %>%
-  mutate(word = i)
+  pos_content_count <- short_data %>%
+    group_by(screen_name) %>%
+    summarise(counter = sum(str_count(text, i))) %>%
+    ungroup() %>%
+    mutate(word = i)
 
   pos.list[[i]] <- pos_content_count
 }
 
 pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE) %>%
   group_by(screen_name) %>%
-  summarise(counter = sum(counter)) %>%
+  summarise(pos_count = sum(counter)) %>%
   ungroup()
 
-# Summarise counts of positive words
+# Summarise counts of negative words
 
+neg.list <- list()
+for(i in neg_vector){
+  neg_content_count <- short_data %>%
+    group_by(screen_name) %>%
+    summarise(counter = sum(str_count(text, i))) %>%
+    ungroup() %>%
+    mutate(word = i)
+  
+  neg.list[[i]] <- neg_content_count
+}
 
+neg_tweet_sum <- rbindlist(neg.list, use.names = TRUE) %>%
+  group_by(screen_name) %>%
+  summarise(neg_count = sum(counter)) %>%
+  ungroup()
+
+# Merge together to computer net sentiment
+
+merged_sum <- pos_tweet_sum %>%
+  mutate(net_sent = pos_count - neg_count) %>%
+  mutate()
 
 #---------------------------------------VISUALISATION------------------------------
 
+p <- merged_sum %>%
+  ggplot(aes(x = screen_name, y = net_sent)) +
+  geom_segment(aes(x = x, y = y, xend = x1, yend = y1, colour = sent_palette)) +
+  labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
+       x = "University account",
+       y = "Net sentiment",
+       caption = "Source: Twitter Developer API\nNet sentiment = positive word count - negative word count\nWord lexicon source: Hu & Liu (2004)") +
+  coord_flip() +
+  theme_bw() +
+  theme(axis.text = element_text(colour = "#25388E"),
+        axis.title = element_text(colour = "#25388E", face = "bold"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        axis.line = element_line(colour = "#25388E"),
+        panel.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
+        plot.background = element_rect(fill = "#edf0f3", colour = "#edf0f3"),
+        plot.title = element_text(colour = "#25388E", face = "bold"),
+        plot.caption = element_text(colour = "#25388E"))
+print(p)
 
+#---------------------------------------PLOT EXPORT--------------------------------
+
+CairoPNG("output/uni-net-sentiment.png", 1250, 700)
+print(p)
+dev.off()
