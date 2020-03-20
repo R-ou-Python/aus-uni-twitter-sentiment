@@ -78,7 +78,7 @@ for(i in pos_vector){
 
 pos_tweet_sum <- rbindlist(pos.list, use.names = TRUE) %>%
   group_by(screen_name) %>%
-  summarise(pos_count = sum(counter)) %>%
+  summarise(pos_count = mean(counter)) %>%
   ungroup()
 
 # Summarise counts of negative words
@@ -96,7 +96,7 @@ for(i in neg_vector){
 
 neg_tweet_sum <- rbindlist(neg.list, use.names = TRUE) %>%
   group_by(screen_name) %>%
-  summarise(neg_count = sum(counter)) %>%
+  summarise(neg_count = mean(counter)) %>%
   ungroup()
 
 # Merge together to computer net sentiment
@@ -121,8 +121,8 @@ p <- merged_sum %>%
   geom_segment(aes(x = screen_name, y = 0, xend = screen_name, yend = net_sent, colour = sent_palette)) +
   labs(title = "Net sentiment of Australia's universities' recent COVID-19-related tweets",
        x = "University account",
-       y = "Net sentiment",
-       caption = "Source: Twitter Developer API\nNet sentiment = positive word count - negative word count\nWord lexicon source: Hu & Liu (2004)") +
+       y = "Mean net sentiment",
+       caption = "Source: Twitter Developer API\nNet sentiment = mean positive word count - mean negative word count\nWord lexicon source: Hu & Liu (2004)") +
   coord_flip() +
   theme_bw() +
   theme(axis.text = element_text(colour = "#25388E"),
