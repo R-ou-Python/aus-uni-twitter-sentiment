@@ -7,7 +7,7 @@ Australia's universities are some of the most impact organisations when it comes
 
 ## Intended output
 
-Machine learning algorithm-based outputs such as cluster analysis, as well as more traditional text and sentiment analytic outputs. Data visualisations are the intended information dissemination medium.
+Machine learning algorithm-based outputs such as cluster analysis, as well as more traditional text and sentiment analytic outputs. Data visualisations are the intended information dissemination medium. A machine learning classification model is also slated to be developed to enable easy classification of future tweets.
 
 ## Disclaimer
 
