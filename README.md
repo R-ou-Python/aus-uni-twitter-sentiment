@@ -1,9 +1,13 @@
 # aus-uni-twitter-sentiment
-Builds a Twitter scraper for Australian universities to analyse sentiment regarding COVID-19
+Builds a Twitter scraper and subsequent analytical algorithms for Australian universities to analyse sentiment regarding COVID-19.
 
 ## Motivation
 
 Australia's universities are some of the most impact organisations when it comes to public health and social crises. Understanding their responses in consideration of the differential impacts across the university types (mission group, size, research intensity, international student volume) may yield interesting outputs for the education sector.
+
+## Languages
+
+This project uses a combination of R and Python.
 
 ## Intended output
 
