@@ -120,11 +120,11 @@ merged_sum <- pos_tweet_sum %>%
   mutate(pos_count = pos_count * the_diff) %>%
   mutate(net_sent = pos_count - neg_count) %>%
   mutate(indicator = case_when(
-    net_sent < 0  ~ "Negative",
-    net_sent == 0 ~ "Neutral",
-    net_sent > 0  ~ "Positive")) %>%
+    net_sent < 0  ~ 0,
+    net_sent == 0 ~ 1,
+    net_sent > 0  ~ 2)) %>%
   dplyr::select(c(text, indicator))
 
 #---------------------------------------EXPORT-------------------------------------
 
-
+write_csv(merged_sum, "data/ml-model-train.csv")
