@@ -121,8 +121,7 @@ merged_sum <- pos_tweet_sum %>%
   mutate(net_sent = pos_count - neg_count) %>%
   mutate(indicator = case_when(
     net_sent < 0  ~ 0,
-    net_sent == 0 ~ 1,
-    net_sent > 0  ~ 2)) %>%
+    net_sent > 0  ~ 1)) %>%
   dplyr::select(c(text, indicator))
 
 #---------------------------------------EXPORT-------------------------------------
