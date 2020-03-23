@@ -1,0 +1,34 @@
+screen_name,mean_net_sent,indicator,university
+Uni_Newcastle,6.522194513715711,Positive,University of Newcastle
+UniversitySA,5.982377389858687,Positive,University of South Australia
+UniofAdelaide,5.728678304239402,Positive,University of Adelaide
+victoriauninews,5.522194513715711,Positive,Victoria University
+MonashUni,4.581920199501248,Positive,Monash University
+ANUmedia,3.6416458852867835,Positive,Australian National University
+uwanews,3.2610972568578553,Positive,University of Western Australia
+EdithCowanUni,3.141645885286783,Positive,Edith Cowan University
+Flinders,2.951371571072319,Positive,Flinders University
+usceduau,2.7367830423940154,Positive,University of the Sunshine Coast
+Sydney_Uni,2.2372069825436407,Positive,University of Sydney
+UQ_News,1.8436907730673318,Positive,University of Queensland
+Swinburne,1.5221945137157107,Positive,Swinburne University of Technology
+latrobe,1.516645885286783,Positive,La Trobe University
+Griffith_Uni,1.4513715710723192,Positive,Griffith University
+UNSW,0.5121060983903877,Positive,University of New South Wales
+QUT,0.38054862842892767,Positive,Queensland University of Technology
+ACUmedia,0.26109725685785534,Positive,Australian Catholic University
+SCUonline,0.17406483790523689,Positive,Southern Cross University
+MurdochUni,-0.23890274314214466,Negative,Murdoch University
+UTSEngage,-0.5083402604599612,Negative,"University of Technology, Sydney"
+Macquarie_Uni,-0.7150124688279302,Negative,Macquarie University
+UniNewEngland,-0.9291770573566085,Negative,University of New England
+BondUniversity,-1,Negative,Bond University
+usqedu,-1.0597256857855362,Negative,University of Southern Queensland
+CharlesSturtUni,-1.112053200332502,Negative,Charles Sturt University
+FedUniAustralia,-1.2389027431421447,Negative,Federation University of Australia
+unimelb,-1.3937655860349127,Negative,University of Melbourne
+TorrensUni,-2,Negative,Torrens University Australia
+RMIT,-2.2389027431421447,Negative,RMIT University 
+UOW,-2.4926018287614298,Negative,University of Wollongong
+CQUni,-3.1592684954280963,Negative,CQ University
+UniCanberra,-4,Negative,University of Canberra
