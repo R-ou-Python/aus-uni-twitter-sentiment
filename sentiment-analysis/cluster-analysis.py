@@ -26,10 +26,10 @@ from sklearn.preprocessing import StandardScaler
 
 # Import data
 
-reliance = pd.read_csv("data/china-proportion-data.csv")
+reliance = pd.read_csv("international-proportion-data.csv")
 reliance
 
-sentiment = pd.read_csv("data/sentiment-output-data.csv")
+sentiment = pd.read_csv("sentiment-output-data.csv")
 sentiment
 
 #------------------------------MERGE DATA SETS---------------------------------
@@ -48,7 +48,7 @@ clean_data
 
 # Convert provider name column to a row index to leave only numbers as data
 
-clean_data = processed.set_index("provider")
+clean_data = clean_data.set_index("provider")
 
 # Remove NAs
 
@@ -111,16 +111,6 @@ final_data.reset_index(inplace = True)
 
 final_data
 
-# Turn cluster numbers into meaningful labels
-
-final_data['cluster_group'] = final_data['cluster_group'].replace([0], 'Moderate China reliance; Negative sentiment')
-final_data['cluster_group'] = final_data['cluster_group'].replace([1], 'Low China reliance; Negative sentiment')
-final_data['cluster_group'] = final_data['cluster_group'].replace([2], 'Low China reliance; Positive sentiment')
-final_data['cluster_group'] = final_data['cluster_group'].replace([3], 'High China reliance; Neutral sentiment')
-final_data['cluster_group'] = final_data['cluster_group'].replace([4], 'High China reliance; Positive sentiment')
-
-final_data
-
 #------------------------------GRAPH CLUSTER ANALYSIS--------------------------
 
 # Define colour palette
@@ -129,11 +119,11 @@ the_palette = ["#25388E", "#57DBD8", "#F84791", "#F9B8B1", "#37BEB0"]
 
 # Build plot
 
-plt.figure()
+fig = plt.figure()
 facet = sns.lmplot(data=final_data, x = 'prop_eftsl', y = 'mean_net_sent', hue = 'cluster_group', fit_reg = False, legend = False, palette = the_palette)
-plt.xlabel("Standardised Chinese proportion of all international EFTSL")
-plt.ylabel("Standardised mean net Tweet sentiment")
-plt.title("Cluster analysis of Australian universities on their reliance\non China and mean net COVID-19 Tweet sentiment")
+plt.xlabel("Scaled proportion of university load that is international")
+plt.ylabel("Scaled mean net Tweet sentiment")
+plt.title("Cluster analysis of Australian universities on their reliance\non internationals and mean net COVID-19 Tweet sentiment")
 plt.subplots_adjust(top = 0.88)
-plt.savefig("output/cluster-plot.svg")
+plt.savefig("cluster-plot.svg")
 plt.show()
