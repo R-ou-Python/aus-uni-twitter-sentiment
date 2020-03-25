@@ -22,6 +22,9 @@ library(janitor)
 library(data.table)
 library(qdapRegex)
 library(Cairo)
+library(ggrepel)
+library(cluster)
+library(factoextra)
 
 # Load in twitter handles of universities
 

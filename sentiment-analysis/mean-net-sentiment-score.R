@@ -123,6 +123,8 @@ merged_sum <- pos_tweet_sum %>%
   inner_join(handle_clean, by = c("screen_name" = "twitter_handle")) %>%
   arrange(desc(mean_net_sent))
 
+save(merged_sum, file = "data/sentiment-output-data.Rda")
+
 #---------------------------------------VISUALISATION------------------------------
 
 # Define palette for plotting based on sentiment
